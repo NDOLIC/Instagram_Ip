@@ -12,32 +12,45 @@ from django.dispatch import receiver
 
 
 class UserProfile(models.Model):
-    photo=models.ImageField(upload_to='images/')
-    bio=models.TextField()
-    user=models.OneToOneField(User,on_delete=models.CASCADE,null=True)
-    follow=models.NullBooleanField(default=False)
     
-    def save_profile(self):
-        self.save()
-    def delete_profile(self):
-       self.delete()
+    user = models.OneToOneField(User)
+    followers = models.ManyToManyField('UserProfile',
+                                        related_name="followers_profile",
+                                        blank=True)
+    following = models.ManyToManyField('UserProfile',
+                                        related_name="following_profile",
+                                        blank=True)
+    profile_pic = models.ImageField(upload_to='profile_pics')
+                                # format='JPEG',
+                                # options={ 'quality': 100},
+                                # null=True,
+                                # blank=True)
 
-    def update_bio(self,bio):
-         self.bio=bio
-         self.save()
+    description = models.CharField(max_length=200, null=True, blank=True)
+
+    def get_number_of_followers(self):
+        print(self.followers.count())
+        if self.followers.count():
+            return self.followers.count()
+        else:
+            return 0
+
+    def get_number_of_following(self):
+        if self.following.count():
+            return self.following.count()
+        else:
+            return 0
 
     def __str__(self):
         return self.user.username
 
-@receiver(post_save, sender=User)
-
 class IGPost(models.Model):
     user_profile = models.ForeignKey(UserProfile, null=True, blank=True)
     title = models.CharField(max_length=100)
-    image = ProcessedImageField(upload_to='posts',
+    image = models.ImageField(upload_to='posts')
                                 #processors=[ResizeToFill(200,200)],
-                                format='JPEG',
-                                options={ 'quality': 100})
+                                # format='JPEG',
+                                # options={ 'quality': 100})
     posted_on = models.DateTimeField(default=datetime.now)
 
     def get_number_of_likes(self):

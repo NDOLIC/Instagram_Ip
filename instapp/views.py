@@ -12,15 +12,10 @@ from . forms import UserCreateForm, PostPictureForm, ProfileEditForm, CommentFor
 from . models import UserProfile, IGPost, Comment, Like
 
 def index(request):
-    if not request.user.is_authenticated():
-        redirect('login')
-    users_followed = request.user.userprofile.following.all()
-    posts = IGPost.objects.filter(
-                user_profile__in=users_followed).order_by('-posted_on')
-
-    return render(request, 'instapp/index.html', {
-        'posts': posts
-    })
+     title='Home | Instagram'
+     posts=IGPost.objects.all()
+     
+     return render(request, 'index.html',{'title':title,'posts': posts})
 
 def signup(request):
     form = UserCreateForm()
@@ -157,7 +152,6 @@ def likes(request, pk):
     return render(request, 'feeds/follow_list.html', context)
 
 
-@ajax_request
 @login_required
 def add_like(request):
     post_pk = request.POST.get('post_pk')
@@ -177,7 +171,7 @@ def add_like(request):
     }
 
 
-@ajax_request
+
 @login_required
 def add_comment(request):
     comment_text = request.POST.get('comment_text')

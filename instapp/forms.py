@@ -1,5 +1,7 @@
 from django import forms
 from . models import IGPost, UserProfile, Comment, Like
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 
 
 class UserCreateForm(UserCreationForm):
@@ -17,19 +19,19 @@ class UserCreateForm(UserCreationForm):
         return user
 
 
-class PostPictureForm(ModelForm):
+class PostPictureForm(forms.ModelForm):
     class Meta:
         model = IGPost
         fields = ['title', 'image']
 
 
-class ProfileEditForm(ModelForm):
+class ProfileEditForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ['profile_pic', 'description']
 
 
-class CommentForm(ModelForm):
+class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['comment']

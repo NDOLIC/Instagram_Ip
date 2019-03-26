@@ -1,6 +1,6 @@
-{% extends 'instapp/base.html' %}
+{% extends 'base.html' %}
 
-{% load static custom_tags %}
+{% load static %}
 
 {% block content %}
     <div class="cards-listing">
@@ -36,7 +36,7 @@
                             <a class="user" href="{% url 'profile' post.user_profile.user.username %}">
                               {{ post.user_profile.user.username }}
                             </a>
-                            <span class="comment">{{ post.title | parse_hashtags | safe }}</span>
+                            <span class="comment">{{ post.title }}</span>
                           </li>
                           <a class="view-more"></a>
                           {% for comment in post.comment_set.all %}
@@ -50,7 +50,6 @@
                         </ul>
                         {% if request.user.is_authenticated %}
                           <section class="input-row">
-                            <i class="fa {% has_user_liked_post post request.user %} submit-like" aria-hidden="true"></i>
                             <div class="comment-input-wrapper">
                               <input class="add-comment" type="text" placeholder="Add a comment...">
                             </div>
